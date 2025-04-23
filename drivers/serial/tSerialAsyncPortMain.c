@@ -392,7 +392,7 @@ serialPort_readChar(CELLCB *p_cellcb, char *p_c)
  *  シリアルポートからの文字列受信（受け口関数）
  */
 ER_UINT
-eSerialPort_read(CELLIDX idx, char *buffer, uint_t length)
+eSerialPort_read(CELLIDX idx, char *buffer, uint_t length, TMO tmout)
 {
   CELLCB  *p_cellcb;
   bool_t  buffer_empty;

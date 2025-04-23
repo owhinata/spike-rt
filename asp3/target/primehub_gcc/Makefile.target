@@ -136,4 +136,4 @@ $(OBJNAME).dfu: $(OBJNAME).bin
 
 deploy-dfu: $(OBJNAME).dfu
 	@echo "Writing $< to the board"
-	$(PYTHON3) $(PYDFU) -u $< $(if $(DFU_VID),--vid $(DFU_VID)) $(if $(DFU_PID),--pid $(DFU_PID))
+	sudo $(PYTHON3) $(PYDFU) -u $< $(if $(DFU_VID),--vid $(DFU_VID)) $(if $(DFU_PID),--pid $(DFU_PID))

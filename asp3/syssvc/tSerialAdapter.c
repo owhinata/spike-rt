@@ -90,7 +90,23 @@ serial_rea_dat(ID portid, char *buf, uint_t len)
 		return(E_ID);				/* ポート番号のチェック */
 	}
 
-	return(cSerialPort_read(portid - 1, buf, len));
+	return(cSerialPort_read(portid - 1, buf, len, TMO_FEVR));
+}
+
+/*
+ *  シリアルポートからの文字列受信（サービスコール）
+ */
+ER_UINT
+serial_trea_dat(ID portid, char *buf, uint_t len, TMO tmout)
+{
+	if (sns_dpn()) {				/* コンテキストのチェック */
+		return(E_CTX);
+	}
+	if (!(1 <= portid && portid <= N_CP_cSerialPort)) {
+		return(E_ID);				/* ポート番号のチェック */
+	}
+
+	return(cSerialPort_read(portid - 1, buf, len, tmout));
 }
 
 /*
