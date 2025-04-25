@@ -418,8 +418,16 @@ eSerialPort_read(CELLIDX idx, char *buffer, uint_t length, TMO tmout)
   buffer_empty = true;      /* ループの1回めはwai_semする */
   while (reacnt < length) {
     if (buffer_empty) {
-      SVC(rercd = cReceiveSemaphore_wait(),
-                    gen_ercd_wait(rercd, p_cellcb));
+			rercd = cReceiveSemaphore_waitTimeout(tmout);
+			if (rercd == E_TMOUT) {
+				ercd = E_TMOUT;
+				goto error_exit;
+			}
+			if (rercd < 0) {
+				gen_ercd_wait(rercd, p_cellcb);
+				ercd = rercd;
+				goto error_exit;
+			}
     }
     SVC(rercd = serialPort_readChar(p_cellcb, &c), rercd);
     *buffer++ = c;
@@ -636,6 +644,7 @@ eSIOCBR_pushReceive(CELLIDX idx, char src)
     /*
      *  バッファフルの場合，受信した文字を捨てる．
      */
+    syslog(LOG_NOTICE, "drop");
   }
   else {
     /*
