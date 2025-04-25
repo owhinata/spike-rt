@@ -39,13 +39,7 @@ INCLUDES += -I$(DRIVERS_DIR) \
 #
 #  Definitions for Pybricks.
 #
-ifdef KERNEL_LIB
-	PYBRICKS_OBJDIR ?= $(KERNEL_LIB)/../obj-primehub_pybricks
-else
-	PYBRICKS_OBJDIR ?= ../obj-primehub_pybricks
-endif
-
-include $(EXTERNAL_DIR)/pybricks.mk
+include $(abspath $(dir $(lastword $(MAKEFILE_LIST))))/../../pybricks.mk
 
 INCLUDES +=  $(PYBRICKS_INCLUDES)
 LIBS += $(PYBRICKS_LIB) -lm
