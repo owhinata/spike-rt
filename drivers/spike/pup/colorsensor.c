@@ -177,6 +177,10 @@ static pbio_error_t pup_color_sensor__get_hsv_ambient(pup_device_t *pdev, pup_co
 pup_device_t *pup_color_sensor_get_device(pbio_port_id_t port) {
   // Get iodevices
 	pup_device_t *pdev = pup_device_get_device(port, PBIO_IODEV_TYPE_ID_SPIKE_COLOR_SENSOR);
+  if (pdev == NULL) {
+    syslog(LOG_ERROR, "pup_device_get_device() failed for port %c:", port);
+    return NULL;
+  }
 	pup_color_hsv_t hsv;
 
 	// Do one reading
