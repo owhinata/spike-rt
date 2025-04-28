@@ -6,11 +6,12 @@
 #           	Graduate School of Information Science, Nagoya Univ., JAPAN
 #
 
+TLSF_TOP_DIR := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 TLSF_DIR := $(DRIVERS_DIR)/tlsf
 
 ifeq ("$(wildcard $(TLSF_DIR)/README.md)","")
 $(info GIT cloning TLSF submodule)
-$(info $(shell git submodule update --init $(TLSF_DIR)))
+$(info $(shell cd $(TLSF_TOP_DIR)/.. && git submodule update --init drivers/tlsf))
 ifeq ("$(wildcard $(TLSF_DIR)/README.md)","")
 $(error failed)
 endif
