@@ -45,6 +45,8 @@
 #include "kernel_impl.h"
 #include <sil.h>
 
+#include "pbioconfig.h"
+
 /*
  *  起動直後の初期化(system_stm32f4xx.c)
  */
@@ -113,10 +115,12 @@ target_initialize(void)
 	 */
 	BSP_LED_Init(LED2);
 
-	///*
-	// *  バーナー出力用のシリアル初期化
-	// */
-	//usart_early_init();
+	/*
+	 *  バーナー出力用のシリアル初期化
+	 */
+#if PBIO_CONFIG_USE_PORT_F_AS_ASP3_DEBUG_UART
+	usart_early_init();
+#endif
 }
 
 void
@@ -164,26 +168,28 @@ target_exit(void)
 	while(1);
 }
 
-//static UART_HandleTypeDef UartHandle;
-//
-//void
-//usart_early_init()
-//{
-//	usart_low_init();
-//
-//	UartHandle.Instance          = USART_NAME; 
-//	UartHandle.Init.BaudRate     = BPS_SETTING;
-//	UartHandle.Init.WordLength   = UART_WORDLENGTH_8B;
-//	UartHandle.Init.StopBits     = UART_STOPBITS_1;
-//	UartHandle.Init.Parity       = UART_PARITY_NONE;
-//	UartHandle.Init.HwFlowCtl    = UART_HWCONTROL_NONE;
-//	UartHandle.Init.Mode         = UART_MODE_TX_RX;
-//	UartHandle.Init.OverSampling = UART_OVERSAMPLING_16;
-//    
-//	if(HAL_UART_Init(&UartHandle) != HAL_OK) {
-//		Error_Handler();
-//	}
-//};
+#if PBIO_CONFIG_USE_PORT_F_AS_ASP3_DEBUG_UART
+static UART_HandleTypeDef UartHandle;
+
+void
+usart_early_init()
+{
+	usart_low_init();
+
+	UartHandle.Instance          = USART_NAME; 
+	UartHandle.Init.BaudRate     = BPS_SETTING;
+	UartHandle.Init.WordLength   = UART_WORDLENGTH_8B;
+	UartHandle.Init.StopBits     = UART_STOPBITS_1;
+	UartHandle.Init.Parity       = UART_PARITY_NONE;
+	UartHandle.Init.HwFlowCtl    = UART_HWCONTROL_NONE;
+	UartHandle.Init.Mode         = UART_MODE_TX_RX;
+	UartHandle.Init.OverSampling = UART_OVERSAMPLING_16;
+    
+	if(HAL_UART_Init(&UartHandle) != HAL_OK) {
+		Error_Handler();
+	}
+};
+#endif
 
 /*
  * エラー発生時の処理
